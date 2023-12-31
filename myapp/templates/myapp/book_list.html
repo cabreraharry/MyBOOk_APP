@@ -4,12 +4,62 @@
 {% block title %}Book List{% endblock %}
 
 {% block content %}
-    <div class="container mt-4">
-        <h1 class="mb-4">Book List</h1>
-        <ul class="list-group">
-            {% for book in books %}
-                <li class="list-group-item">{{ book.title }} by {{ book.author.name }}</li>
-            {% endfor %}
-        </ul>
+    <div class="card">
+        <div class="card-body">
+            <h1 class="card-title">Book List</h1>
+            <div class="row">
+                {% for book in books %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ book.title }}</h5>
+                                <p class="card-text"><strong>Author:</strong> {{ book.author.name }}</p>
+                                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#bookDetailsModal{{ book.pk }}">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal for Book Details -->
+                    <div class="modal fade" id="bookDetailsModal{{ book.pk }}" tabindex="-1" role="dialog" aria-labelledby="bookDetailsModalLabel{{ book.pk }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="bookDetailsModalLabel{{ book.pk }}">Book Details - {{ book.title }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p><strong>Author:</strong> {{ book.author.name }}</p>
+                                    <p><strong>Reviewer:</strong> {% if book.reviewer %}{{ book.reviewer.name }}{% else %}N/A{% endif %}</p>
+                                    <p><strong>Magazine:</strong> {% if book.magazine %}{{ book.magazine.title }}{% else %}N/A{% endif %}</p>
+                                    <p><strong>Publisher:</strong> {% if book.publisher %}{{ book.publisher.name }}{% else %}N/A{% endif %}</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination mt-3">
+                    {% if books.has_previous %}
+                        <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ books.previous_page_number }}">previous</a></li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ books.number }} of {{ books.paginator.num_pages }}.</span>
+                    </li>
+
+                    {% if books.has_next %}
+                        <li class="page-item"><a class="page-link" href="?page={{ books.next_page_number }}">next</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ books.paginator.num_pages }}">last &raquo;</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
     </div>
 {% endblock %}
