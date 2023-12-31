@@ -1,11 +1,49 @@
+<!-- myproject/templates/myapp/book_detail.html -->
 {% extends 'myapp/base.html' %}
 
 {% block title %}{{ book.title }} - Book Detail{% endblock %}
 
 {% block content %}
     <div class="container mt-4">
-        <h1 class="mb-4">{{ book.title }}</h1>
-        <p><strong>Author:</strong> {{ book.author.name }}</p>
-        <p><strong>Published Date:</strong> {{ book.published_date }}</p>
+        <div class="card">
+            <div class="card-body">
+                <h1 class="card-title">{{ book.title }}</h1>
+                <p class="card-text"><strong>Author:</strong> {{ book.author.name }}</p>
+                <p class="card-text"><strong>Published Date:</strong> {{ book.published_date }}</p>
+
+                <!-- Display Reviewers -->
+                <p class="card-text"><strong>Reviewers:</strong>
+                    {% if book.reviewers.all %}
+                        {% for reviewer in book.reviewers.all %}
+                            {{ reviewer.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No reviewers for this book.
+                    {% endif %}
+                </p>
+
+                <!-- Display Publishers -->
+                <p class="card-text"><strong>Publishers:</strong>
+                    {% if book.publishers.all %}
+                        {% for publisher in book.publishers.all %}
+                            {{ publisher.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No publishers for this book.
+                    {% endif %}
+                </p>
+
+                <!-- Display Magazines -->
+                <p class="card-text"><strong>Magazines:</strong>
+                    {% if book.magazines.all %}
+                        {% for magazine in book.magazines.all %}
+                            {{ magazine.title }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        No magazines for this book.
+                    {% endif %}
+                </p>
+            </div>
+        </div>
     </div>
 {% endblock %}
